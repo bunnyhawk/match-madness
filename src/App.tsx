@@ -36,6 +36,7 @@ export default function App() {
           key={activePairs.map(p => p.dutch).join(',')}
           allPairs={activePairs}
           onFinish={handleFinish}
+          onBack={handleBack}
         />
       )}
       {screen === 'finish' && (

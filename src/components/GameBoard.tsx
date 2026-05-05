@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import type { WordPair } from '../types';
 import { shuffle } from '../utils/game';
 
-const PAIR_COUNT = 8;
+const PAIR_COUNT = 6;
 const MATCH_DELAY = 800;
 const WRONG_DELAY = 600;
 
@@ -20,12 +20,13 @@ interface Selected {
 interface Props {
   allPairs: WordPair[];
   onFinish: () => void;
+  onBack: () => void;
 }
 
 let uidCounter = 0;
 const uid = () => `s${++uidCounter}`;
 
-export default function GameBoard({ allPairs, onFinish }: Props) {
+export default function GameBoard({ allPairs, onFinish, onBack }: Props) {
   const [slots, setSlots] = useState<Slot[]>([]);
   const [dutchOrder, setDutchOrder] = useState<number[]>([]);
   const [englishOrder, setEnglishOrder] = useState<number[]>([]);
@@ -109,11 +110,13 @@ export default function GameBoard({ allPairs, onFinish }: Props) {
 
   return (
     <div className="board">
+      <div className="board-header">
+        <button className="back-btn" onClick={onBack}>← Sections</button>
+        <span className="progress-label">{matchedCount} / {totalPairs} matched</span>
+      </div>
       <div className="progress-bar">
         <div className="progress-fill" style={{ width: `${progress}%` }} />
       </div>
-      <div className="progress-label">{matchedCount} / {totalPairs} matched</div>
-
       <div className="columns">
         <div className="column">
           {dutchOrder.map(i => {

@@ -193,6 +193,18 @@ body {
   gap: 12px;
 }
 
+.board-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.board-header .progress-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
 .progress-bar {
   height: 10px;
   background: var(--border);
