@@ -3,7 +3,7 @@ import type { WordPair } from '../types';
 import { shuffle, stripContext } from '../utils/game';
 
 const PAIR_COUNT = 6;
-const MATCH_DELAY = 800;
+const MATCH_DELAY = 1400;
 const WRONG_DELAY = 600;
 
 interface Slot {
