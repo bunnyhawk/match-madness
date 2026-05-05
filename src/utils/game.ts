@@ -55,6 +55,21 @@ export function nextFromQueue(
   return { next: queue[useIdx], rest: queue.filter((_, i) => i !== useIdx) };
 }
 
+// Remove pairs whose stripped display text conflicts with an earlier pair.
+// Shuffle the input first so the kept representative is random each session.
+export function dedupeByDisplay(pairs: WordPair[]): WordPair[] {
+  const seenDutch = new Set<string>();
+  const seenEnglish = new Set<string>();
+  return pairs.filter(p => {
+    const d = stripContext(p.dutch);
+    const e = stripContext(p.english);
+    if (seenDutch.has(d) || seenEnglish.has(e)) return false;
+    seenDutch.add(d);
+    seenEnglish.add(e);
+    return true;
+  });
+}
+
 export function dedupe(pairs: WordPair[]): WordPair[] {
   const seen = new Set<string>();
   return pairs.filter(p => {

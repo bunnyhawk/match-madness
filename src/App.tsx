@@ -3,7 +3,7 @@ import SectionPicker from './components/SectionPicker';
 import GameBoard from './components/GameBoard';
 import FinishScreen from './components/FinishScreen';
 import type { WordPair } from './types';
-import { dedupe } from './utils/game';
+import { shuffle, dedupe, dedupeByDisplay } from './utils/game';
 
 type Screen = 'picker' | 'game' | 'finish';
 
@@ -12,7 +12,8 @@ export default function App() {
   const [activePairs, setActivePairs] = useState<WordPair[]>([]);
 
   function handleStart(pairs: WordPair[]) {
-    setActivePairs(dedupe(pairs));
+    // Shuffle before deduping so the kept representative varies each session
+    setActivePairs(dedupeByDisplay(shuffle(dedupe(pairs))));
     setScreen('game');
   }
 
