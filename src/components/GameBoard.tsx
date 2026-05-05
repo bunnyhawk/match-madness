@@ -122,6 +122,7 @@ export default function GameBoard({ allPairs, onFinish, onBack }: Props) {
       </div>
       <div className="columns">
         <div className="column">
+          <div className="column-header">English</div>
           {englishOrder.map(i => {
             const slot = slots[i];
             if (!slot) return null;
@@ -141,6 +142,7 @@ export default function GameBoard({ allPairs, onFinish, onBack }: Props) {
           })}
         </div>
         <div className="column">
+          <div className="column-header">Dutch</div>
           {dutchOrder.map(i => {
             const slot = slots[i];
             if (!slot) return null;
