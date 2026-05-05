@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { WordPair } from '../types';
-import { shuffle, stripContext } from '../utils/game';
+import { shuffle, stripContext, pickWithoutConflicts, nextFromQueue } from '../utils/game';
 
 const PAIR_COUNT = 6;
 const MATCH_DELAY = 1400;
@@ -37,8 +37,7 @@ export default function GameBoard({ allPairs, onFinish, onBack }: Props) {
 
   const initBoard = useCallback((pairs: WordPair[]) => {
     const shuffled = shuffle(pairs);
-    const onBoard = shuffled.slice(0, Math.min(PAIR_COUNT, shuffled.length));
-    const remaining = shuffled.slice(onBoard.length);
+    const { picked: onBoard, rest: remaining } = pickWithoutConflicts(shuffled, Math.min(PAIR_COUNT, shuffled.length));
     const indices = onBoard.map((_, i) => i);
     setSlots(onBoard.map(pair => ({ pair, slotId: uid(), state: 'idle' })));
     setDutchOrder(shuffle([...indices]));
@@ -75,11 +74,15 @@ export default function GameBoard({ allPairs, onFinish, onBack }: Props) {
       ));
 
       const capturedQueue = queue;
+      const visiblePairs = slots
+        .filter((s, i) => i !== slotIdx && s.pair)
+        .map(s => s.pair!);
+
       setTimeout(() => {
         if (newCount === totalPairs) { onFinish(); return; }
 
         if (capturedQueue.length > 0) {
-          const [next, ...rest] = capturedQueue;
+          const { next, rest } = nextFromQueue(capturedQueue, visiblePairs);
           setQueue(rest);
           setSlots(prev => prev.map((s, i) =>
             i === slotIdx ? { pair: next, slotId: uid(), state: 'idle' } : s
