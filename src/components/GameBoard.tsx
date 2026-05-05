@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { WordPair } from '../types';
-import { shuffle } from '../utils/game';
+import { shuffle, stripContext } from '../utils/game';
 
 const PAIR_COUNT = 6;
 const MATCH_DELAY = 800;
@@ -119,25 +119,6 @@ export default function GameBoard({ allPairs, onFinish, onBack }: Props) {
       </div>
       <div className="columns">
         <div className="column">
-          {dutchOrder.map(i => {
-            const slot = slots[i];
-            if (!slot) return null;
-            const isSelected = selected?.slotIdx === i && selected?.side === 'dutch';
-            const cardState = slot.state !== 'idle' ? slot.state : isSelected ? 'selected' : 'idle';
-            return (
-              <button
-                key={slot.slotId + '-dutch'}
-                className={`card card--dutch card--${cardState}`}
-                onClick={() => handleCardClick(i, 'dutch')}
-                disabled={!slot.pair || slot.state !== 'idle'}
-                style={{ visibility: slot.pair ? 'visible' : 'hidden' }}
-              >
-                {slot.pair?.dutch}
-              </button>
-            );
-          })}
-        </div>
-        <div className="column">
           {englishOrder.map(i => {
             const slot = slots[i];
             if (!slot) return null;
@@ -151,7 +132,26 @@ export default function GameBoard({ allPairs, onFinish, onBack }: Props) {
                 disabled={!slot.pair || slot.state !== 'idle'}
                 style={{ visibility: slot.pair ? 'visible' : 'hidden' }}
               >
-                {slot.pair?.english}
+                {slot.pair ? stripContext(slot.pair.english) : ''}
+              </button>
+            );
+          })}
+        </div>
+        <div className="column">
+          {dutchOrder.map(i => {
+            const slot = slots[i];
+            if (!slot) return null;
+            const isSelected = selected?.slotIdx === i && selected?.side === 'dutch';
+            const cardState = slot.state !== 'idle' ? slot.state : isSelected ? 'selected' : 'idle';
+            return (
+              <button
+                key={slot.slotId + '-dutch'}
+                className={`card card--dutch card--${cardState}`}
+                onClick={() => handleCardClick(i, 'dutch')}
+                disabled={!slot.pair || slot.state !== 'idle'}
+                style={{ visibility: slot.pair ? 'visible' : 'hidden' }}
+              >
+                {slot.pair ? stripContext(slot.pair.dutch) : ''}
               </button>
             );
           })}

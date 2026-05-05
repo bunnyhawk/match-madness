@@ -9,6 +9,13 @@ export function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
+// Remove parenthetical clarifications from display text, e.g.
+// "you (singular informal stressed)" → "you"
+// "(little) cup" → "cup"
+export function stripContext(text: string): string {
+  return text.replace(/\(.*?\)/g, '').replace(/\s+/g, ' ').trim();
+}
+
 export function dedupe(pairs: WordPair[]): WordPair[] {
   const seen = new Set<string>();
   return pairs.filter(p => {
